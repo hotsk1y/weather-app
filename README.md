@@ -1,3 +1,5 @@
+https://hotsk1y.github.io/weather-app/
+
 # Задание 5.2
 
 ## Цель:
