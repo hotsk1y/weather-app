@@ -3,9 +3,11 @@ import axios from 'axios'
 let favourites = []
 
 try {
-  favourites = JSON.parse(localStorage.getItem('cities'))
+  favourites = JSON.parse(localStorage.getItem('cities')) !== null
+    ? JSON.parse(localStorage.getItem('cities'))
+    : []
 } catch (error) {
-  //
+  ///
 }
 
 const defaultMainPageState = {
