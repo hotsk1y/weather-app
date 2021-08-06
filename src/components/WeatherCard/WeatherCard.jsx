@@ -1,6 +1,6 @@
 import './WeatherCard.css'
 
-import React from 'react'
+import React, {useCallback, useMemo} from 'react'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
 import { useEffect } from 'react'
@@ -19,22 +19,20 @@ const WeatherCard = ({ weather, favourites }) => {
     dispatch(setIsFahrenheitAction(payload))
   }
 
-  let temp
   let cities = [...favourites]
 
-  const handleChange = () => {
-    setIsFahrenheit(!isFahrenheit)
+  // called if user changes temperature mod (C of F checkbox)
+  const calcTemp = (fahrenheit, error) => {
+    if (!error) {
+      if (fahrenheit) {
+        return `${Math.round((weather.data.main.temp * 9) / 5 + 32)}°F`
+      } else {
+        return `${Math.round(weather.data.main.temp)}°C`
+      }
+    }
   }
 
-  const calcTemp = (fahrenheit) => {
-    fahrenheit
-      ? (temp = `${Math.round((weather.data.main.temp * 9) / 5 + 32)}°F`)
-      : (temp = `${Math.round(weather.data.main.temp)}°C`)
-  }
-
-  if (!isError) {
-    calcTemp(isFahrenheit)
-  }
+  const temp = useMemo(() => calcTemp(isFahrenheit), [isFahrenheit, isError])
 
   const saveCity = () => {
     cities.push(weather.data)
@@ -42,7 +40,11 @@ const WeatherCard = ({ weather, favourites }) => {
     dispatch(setFavouritesAction(filteredCities))
   }
 
-  useEffect(() => {}, [])
+  const handleChange = useCallback(() => {
+    setIsFahrenheit(!isFahrenheit)
+  }, [isFahrenheit])
+
+  const handleClick = useCallback(() => saveCity(), [])
 
   return (
     <>
@@ -57,12 +59,12 @@ const WeatherCard = ({ weather, favourites }) => {
           </div>
           <div className="bottom-controls">
             <FormControlLabel
-              control={<Switch />}
+              control={<Switch checked={isFahrenheit} />}
               label="Fahrenheit"
-              onChange={() => handleChange()}
+              onChange={handleChange}
               className="city-input"
             />
-            <button className="fav-btn" onClick={() => saveCity()}>
+            <button className="fav-btn" onClick={handleClick}>
               Add city to favourite
             </button>
           </div>

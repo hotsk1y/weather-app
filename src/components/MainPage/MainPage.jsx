@@ -1,6 +1,6 @@
 import './MainPage.css'
 
-import React from 'react'
+import React, {useCallback} from 'react'
 import WeatherCard from '../WeatherCard/WeatherCard'
 import SavedCity from '../SavedCity/SavedCity'
 
@@ -22,16 +22,24 @@ const MainPage = () => {
     (state) => state.mainPage
   )
 
-  const onKeyDownHandler = (e) => {
-    if (e.keyCode === 13) {
-      dispatch(fetchWeather(query))
-    }
-  }
-
   const removeItem = (id) => {
     const newArr = favourites.filter((city) => city.id !== id)
     dispatch(setFavouritesAction(newArr))
   }
+
+  const handleKeyDown = useCallback((e) => {
+    if (e.keyCode === 13) {
+      dispatch(fetchWeather(query))
+    }
+  }, [query])
+
+  const handleChange = useCallback((e) => {
+    dispatch(setQueryAction(e.target.value))
+  }, [])
+
+  const handleClick = useCallback(() => {
+    dispatch(fetchWeather(query))
+  }, [query])
 
   useEffect(() => {
     dispatch(fetchWeather())
@@ -57,16 +65,16 @@ const MainPage = () => {
             className="weater-input"
             type="text"
             placeholder="Enter city..."
-            onChange={(e) => dispatch(setQueryAction(e.target.value))}
+            onChange={handleChange}
             value={query}
-            onKeyDown={(e) => onKeyDownHandler(e)}
+            onKeyDown={handleKeyDown}
           />
           <Button
             variant="outlined"
             size="small"
             color="primary"
             style={{ borderColor: '#fff' }}
-            onClick={() => dispatch(fetchWeather(query))}
+            onClick={handleClick}
           >
             Search
           </Button>
@@ -74,8 +82,6 @@ const MainPage = () => {
         {!isLoading ? (
           <WeatherCard
             weather={weather}
-            isLoading={isLoading}
-            isError={isError}
             favourites={favourites}
           />
         ) : (
