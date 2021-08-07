@@ -3,16 +3,15 @@ import './WeatherCard.css'
 import React, {useCallback, useMemo} from 'react'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
-import { useEffect } from 'react'
 import { unique } from '../../healper'
 import { useDispatch, useSelector } from 'react-redux'
 import { setIsFahrenheitAction } from '../../store/reducers/weatherCardReducer'
 import { setFavouritesAction } from '../../store/reducers/mainPageReducer'
 
-const WeatherCard = ({ weather, favourites }) => {
+const WeatherCard = () => {
   const dispatch = useDispatch()
 
-  const { isError } = useSelector((state) => state.mainPage)
+  const { isError, weather, favourites } = useSelector((state) => state.mainPage)
 
   const { isFahrenheit } = useSelector((state) => state.weatherCard)
   const setIsFahrenheit = (payload) => {

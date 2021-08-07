@@ -18,14 +18,14 @@ import {
 const MainPage = () => {
   const dispatch = useDispatch()
 
-  const { query, isLoading, isError, weather, favourites } = useSelector(
+  const { query, isLoading, weather, favourites } = useSelector(
     (state) => state.mainPage
   )
 
-  const removeItem = (id) => {
+  const removeItem = useCallback((id) => {
     const newArr = favourites.filter((city) => city.id !== id)
     dispatch(setFavouritesAction(newArr))
-  }
+  }, [favourites])
 
   const handleKeyDown = useCallback((e) => {
     if (e.keyCode === 13) {
@@ -80,10 +80,7 @@ const MainPage = () => {
           </Button>
         </div>
         {!isLoading ? (
-          <WeatherCard
-            weather={weather}
-            favourites={favourites}
-          />
+          <WeatherCard />
         ) : (
           <div className="loader">
             <CircularProgress color="secondary" />

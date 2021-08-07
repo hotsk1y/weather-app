@@ -1,6 +1,6 @@
 import './SavedCity.css'
 
-import React, {useCallback} from 'react'
+import React, {useCallback, memo} from 'react'
 
 import DeleteIcon from '@material-ui/icons/Delete'
 import { fetchWeather } from '../../store/reducers/mainPageReducer'
@@ -34,4 +34,4 @@ const SavedCity = ({ cityName, removeItem, id }) => {
   )
 }
 
-export default SavedCity
+export default memo(SavedCity)
